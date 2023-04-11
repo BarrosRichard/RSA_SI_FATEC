@@ -1,6 +1,5 @@
 import random
 
-
 '''
 
     Verifica se um determinado número 'n' é primo
@@ -10,7 +9,7 @@ import random
     - n: int
 
 '''
-def is_prime(n):
+def is_prime(n) -> bool:
     if n <= 1:
         return False
     elif n <= 3:
@@ -30,7 +29,7 @@ def is_prime(n):
     Gera um número primo utilizando is_prime() para efetuar a verificação    
 
 '''
-def generate_prime_number():
+def generate_prime_number() -> int:
     prime = False
     while not prime:
         p = random.randint(100, 1000)
@@ -48,7 +47,7 @@ def generate_prime_number():
     - b: int
 
 '''
-def gcd(a, b):
+def gcd(a, b) -> int:
     while b != 0:
         a, b = b, a % b
     return a
@@ -64,7 +63,7 @@ def gcd(a, b):
     - phi: int
 
 '''
-def multiplicative_inverse(e, phi):
+def multiplicative_inverse(e, phi) -> int:
     d = 0
     x1 = 0
     x2 = 1
@@ -94,7 +93,7 @@ def multiplicative_inverse(e, phi):
     Gera um par de chaves (pública e privada)
 
 '''
-def generate_key_pair():
+def generate_key_pair() -> tuple(int):
     p = generate_prime_number()
     q = generate_prime_number()
     n = p * q
@@ -115,31 +114,46 @@ def generate_key_pair():
     Encripta e retorna um texto utilizando a chave pública 
 
 '''
-def encrypt(public_key, plaintext):
+def encrypt(public_key, plaintext) -> list[int]:
     n, e = public_key
     ciphertext = [(ord(char) ** e) % n for char in plaintext]
     return ciphertext
-
 
 '''
 
     Decripta e retorna um texto utilizando a chave privada 
 
 '''
-def decrypt(private_key, ciphertext):
+def decrypt(private_key, ciphertext) -> str:
     n, d = private_key
     plaintext = [chr((char ** d) % n) for char in ciphertext]
     return ''.join(plaintext)
 
 
-'''
 
-    EXECUÇÃO
+def main() -> None:
+    print(
+        '###########################################################',
+        '################# RSA ENCRYPTOR/DECRYPTOR #################',
+        '###########################################################',
+        '(Use: CTRL + C para [SAIR])',
+        sep='\n'
+    )
 
-'''
-public_key, private_key = generate_key_pair()
-plaintext = input("Digite a mensagem a ser criptografada: ")
-ciphertext = encrypt(public_key, plaintext)
-print(ciphertext)
-plaintext = decrypt(private_key, ciphertext)
-print(plaintext)
+    plaintext = input('\nDigite uma mensagem: ')
+
+    print('Gerando par de chaves...')
+    public_key, private_key = generate_key_pair()
+    print('Encriptando... Chave publica: {}'.format(public_key))
+    ciphertext = encrypt(public_key, plaintext)
+    print('Decriptando... Chave privada: {}'.format(private_key))
+    plaintext = decrypt(private_key, ciphertext)
+
+    print('\nMENSAGEM ENCRIPTADA.: {}'.format(ciphertext))
+    print('MENSAGEM DECRIPTADA.: {}'.format(plaintext))
+
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        print('[SAIR]')
