@@ -60,20 +60,20 @@ def gcd(a, b) -> int:
     PARAMS
 
     - e: int
-    - phi: int
+    - z: int
 
 '''
-def multiplicative_inverse(e, phi) -> int:
+def multiplicative_inverse(e, z) -> int:
     d = 0
     x1 = 0
     x2 = 1
     y1 = 1
-    temp_phi = phi
+    temp_z = z
 
     while e > 0:
-        temp1 = temp_phi // e
-        temp2 = temp_phi - temp1 * e
-        temp_phi = e
+        temp1 = temp_z // e
+        temp2 = temp_z - temp1 * e
+        temp_z = e
         e = temp2
 
         x = x2 - temp1 * x1
@@ -84,8 +84,8 @@ def multiplicative_inverse(e, phi) -> int:
         d = y1
         y1 = y
 
-    if temp_phi == 1:
-        return d + phi
+    if temp_z == 1:
+        return d + z
 
 
 '''
@@ -93,19 +93,19 @@ def multiplicative_inverse(e, phi) -> int:
     Gera um par de chaves (pública e privada)
 
 '''
-def generate_key_pair() -> tuple(int):
+def generate_key_pair() -> tuple:
     p = generate_prime_number()
     q = generate_prime_number()
     n = p * q
-    phi = (p - 1) * (q - 1)
+    z = (p - 1) * (q - 1)
 
-    e = random.randint(1, phi)
-    g = gcd(e, phi)
+    e = random.randint(1, z)
+    g = gcd(e, z)
     while g != 1:
-        e = random.randint(1, phi)
-        g = gcd(e, phi)
+        e = random.randint(1, z)
+        g = gcd(e, z)
 
-    d = multiplicative_inverse(e, phi)
+    d = multiplicative_inverse(e, z)
 
     return ((n, e), (n, d))
 
@@ -125,10 +125,9 @@ def encrypt(public_key, plaintext) -> list[int]:
 
 '''
 def decrypt(private_key, ciphertext) -> str:
-    n, d = private_key
+    n, d = private_key # (n, d)
     plaintext = [chr((char ** d) % n) for char in ciphertext]
     return ''.join(plaintext)
-
 
 
 def main() -> None:
