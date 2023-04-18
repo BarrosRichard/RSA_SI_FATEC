@@ -1,14 +1,5 @@
 import random
 
-'''
-
-    Verifica se um determinado número 'n' é primo
-
-    PARAMS
-
-    - n: int
-
-'''
 def is_prime(n) -> bool:
     if n <= 1:
         return False
@@ -23,12 +14,6 @@ def is_prime(n) -> bool:
         i += 6
     return True
 
-
-'''
-
-    Gera um número primo utilizando is_prime() para efetuar a verificação    
-
-'''
 def generate_prime_number() -> int:
     prime = False
     while not prime:
@@ -37,32 +22,11 @@ def generate_prime_number() -> int:
             prime = True
     return p
 
-'''
-
-    Retorna o mínimo divisor comum entre dois números 'a' e 'b'
-
-    PARAMS
-
-    - a: int
-    - b: int
-
-'''
 def gcd(a, b) -> int:
     while b != 0:
         a, b = b, a % b
     return a
 
-
-'''
-
-    Retorna o multiplicativo inverso de 'e' e 'phi'
-
-    PARAMS
-
-    - e: int
-    - z: int
-
-'''
 def multiplicative_inverse(e, z) -> int:
     d = 0
     x1 = 0
@@ -87,12 +51,6 @@ def multiplicative_inverse(e, z) -> int:
     if temp_z == 1:
         return d + z
 
-
-'''
-
-    Gera um par de chaves (pública e privada)
-
-'''
 def generate_key_pair() -> tuple:
     p = generate_prime_number()
     q = generate_prime_number()
@@ -109,26 +67,15 @@ def generate_key_pair() -> tuple:
 
     return ((n, e), (n, d))
 
-'''
-
-    Encripta e retorna um texto utilizando a chave pública 
-
-'''
 def encrypt(public_key, plaintext) -> list[int]:
     n, e = public_key
     ciphertext = [(ord(char) ** e) % n for char in plaintext]
     return ciphertext
 
-'''
-
-    Decripta e retorna um texto utilizando a chave privada 
-
-'''
 def decrypt(private_key, ciphertext) -> str:
-    n, d = private_key # (n, d)
+    n, d = private_key
     plaintext = [chr((char ** d) % n) for char in ciphertext]
     return ''.join(plaintext)
-
 
 def main() -> None:
     print(
