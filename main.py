@@ -1,4 +1,5 @@
 import random
+import os
 
 def is_prime(n) -> bool:
     if n <= 1:
@@ -14,22 +15,12 @@ def is_prime(n) -> bool:
         i += 6
     return True
 
-def generate_prime_number() -> int:
-    prime = False
-    while not prime:
-        p = random.randint(1000, 100000)
-        if is_prime(p):
-            prime = True
-    return p
-
 def gcd(a, b) -> int:
     while b != 0:
         a, b = b, a % b
     return a
 
-def generate_key_pair() -> tuple:
-    p = generate_prime_number()
-    q = generate_prime_number()
+def generate_key_pair(p, q) -> tuple:
     n = p * q
     z = (p - 1) * (q - 1)
 
@@ -45,27 +36,45 @@ def generate_key_pair() -> tuple:
 
 def encrypt(public_key, plaintext) -> list[int]:
     n, e = public_key
-    ciphertext = [(ord(char) ** e) % n for char in plaintext]
+    ciphertext = [pow(ord(char), e, n) for char in plaintext]
     return ciphertext
 
 def decrypt(private_key, ciphertext) -> str:
     n, d = private_key
-    plaintext = [chr((char ** d) % n) for char in ciphertext]
+    plaintext = [chr(pow(char, d, n)) for char in ciphertext]
     return ''.join(plaintext)
 
 def main() -> None:
+
+    TITLE = '''
+    ###########################################################
+    ################# RSA ENCRYPTOR/DECRYPTOR #################
+    ###########################################################
+    (Use: CTRL + C para [SAIR])
+    '''
+
     print(
-        '###########################################################',
-        '################# RSA ENCRYPTOR/DECRYPTOR #################',
-        '###########################################################',
-        '(Use: CTRL + C para [SAIR])',
+        TITLE,
         sep='\n'
     )
+
+    P = int(input("P: "))
+    Q = int(input("Q: "))
+    
+    while not is_prime(P) or not is_prime(Q):
+        os.system('clear')
+        print(
+            TITLE,
+            sep='\n'
+        )
+        print("\nErro.: P e Q devem ser primos...")
+        P = int(input("P: "))
+        Q = int(input("Q: "))
 
     plaintext = input('\nDigite uma mensagem: ')
 
     print('Gerando par de chaves...')
-    public_key, private_key = generate_key_pair()
+    public_key, private_key = generate_key_pair(P, Q)
     print('Encriptando... Chave publica: {}'.format(public_key))
     ciphertext = encrypt(public_key, plaintext)
     print('Decriptando... Chave privada: {}'.format(private_key))
